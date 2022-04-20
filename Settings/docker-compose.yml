@@ -2,28 +2,44 @@ version: "3"
 
 services:
   nginx-web:
-    image: ssy02060/nginx-web:1.0
-    restart: always
+    image: ssy02060/nginx-web:latest
+    # restart: always
     ports:
       - "80:80"
     container_name: nginx-web
+    networks:
+      broker-net:
+        ipv4_address: 172.33.0.04
 
   tomcat-server:
     image: ssy02060/tomcat-server:latest
     restart: always
     ports:
       - "8080:8080"
+      - "8009:8009"
     container_name: tomcat-server
+    networks:
+      broker-net:
+        ipv4_address: 172.33.0.03
   mysql-server:
-    image: ssy02060/db-mysql:1.0
+    image: ssy02060/db-mysql:latest
     restart: always
     container_name: mysql-server
     environment:
       - MYSQL_DATABASE=mysql
       - MYSQL_ROOT_PASSWORD=san9yun2
       - TZ=Asia/Seoul
+    ports:
+      - "3306:3306"
+    networks:
+      broker-net:
+        ipv4_address: 172.33.0.2
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     # volumes:
     #   - /home/seo/Documents/docker/data:/var/lib/mysql
+networks:
+  broker-net:
+    external:
+      name: broker
