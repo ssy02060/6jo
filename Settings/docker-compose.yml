@@ -3,7 +3,7 @@ version: "3"
 services:
   nginx-web:
     image: ssy02060/nginx-web:latest
-    # restart: always
+    restart: always
     ports:
       - "80:80"
     container_name: nginx-web
@@ -26,7 +26,7 @@ services:
     restart: always
     container_name: mysql-server
     environment:
-      - MYSQL_DATABASE=mysql
+      - MYSQL_DATABASE=cloud
       - MYSQL_ROOT_PASSWORD=san9yun2
       - TZ=Asia/Seoul
     ports:
@@ -37,8 +37,10 @@ services:
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-    # volumes:
-    #   - /home/seo/Documents/docker/data:/var/lib/mysql
+    volumes:
+      - ./db/conf.d:/etc/mysql/conf.d
+      - ./db/data:/var/lib/mysql
+      - ./db/initdb.d:/docker-entrypoint-initdb.d
 networks:
   broker-net:
     external:
