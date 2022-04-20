@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  nginx-web:
+    image: ssy02060/nginx-web:1.0
+    restart: always
+    ports:
+      - "80:80"
+    container_name: nginx-web
+
+  tomcat-server:
+    image: ssy02060/tomcat-server:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    container_name: tomcat-server
+  mysql-server:
+    image: ssy02060/db-mysql:1.0
+    restart: always
+    container_name: mysql-server
+    environment:
+      - MYSQL_DATABASE=mysql
+      - MYSQL_ROOT_PASSWORD=san9yun2
+      - TZ=Asia/Seoul
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    # volumes:
+    #   - /home/seo/Documents/docker/data:/var/lib/mysql
