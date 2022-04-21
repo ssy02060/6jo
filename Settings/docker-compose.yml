@@ -20,6 +20,8 @@ services:
       - "8080:8080"
       - "8009:8009"
     container_name: tomcat-server
+    volumes:
+      - ../Sources/Web_Service:/usr/local/tomcat/webapps/ROOT
     networks:
       broker-net:
         ipv4_address: 172.33.0.03
