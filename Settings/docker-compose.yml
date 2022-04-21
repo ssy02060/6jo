@@ -8,7 +8,9 @@ services:
       - "80:80"
     container_name: nginx-web
     volumes:
-      - ../Sources/PythonCLI/logs:/var/log/nginx/
+      - ../Sources/PythonCLI/logs:/var/log/nginx/default
+      # - ../Sources/Web_Service/config:/etc/nginx/
+      # - ../Sources/Web_Service/config/server:/etc/nginx/conf.d
     networks:
       broker-net:
         ipv4_address: 172.33.0.04
