@@ -31,7 +31,7 @@ services:
     container_name: mysql-server
     environment:
       - MYSQL_DATABASE=cloud
-      - MYSQL_ROOT_PASSWORD=san9yun2
+      - MYSQL_ROOT_PASSWORD=abcd
       - TZ=Asia/Seoul
     ports:
       - "3306:3306"
