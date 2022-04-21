@@ -13,7 +13,7 @@
 		Connection conn = null;
 		String url = "jdbc:mysql://172.33.0.2:3306/cloud";
 		String id = "root";                     //MySQL에 접속을 위한 계정의 ID
-		String pwd = "san9yun2";            //MySQL에 접속을 위한 계정의 암호
+		String pwd = "abcd";            //MySQL에 접속을 위한 계정의 암호
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		conn = DriverManager.getConnection(url, id, pwd);
 		out.println("<h1>MySQL DB 연결 성공</h1>");
