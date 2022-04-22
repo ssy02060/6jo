@@ -3,11 +3,10 @@
 <html>
     <head>
         <meta charset="utf-8">
+	<title> www.example.com </title>
     </head>
     <body>
-        <h1>작성한 내용</h1>
-        <ul>
-            <li>Contents: <%= request.getParameter("contents") %></li>
-        </ul>
+	    등록된 내용입니다.<br/>
+	    <h1> <%= request.getParameter("contents") %></h1>
     </body>
 </html>

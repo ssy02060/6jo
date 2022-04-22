@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title> Main Page </title>
+		<title> www.example.com </title>
 	</head>
 	<body>
 		<%
@@ -18,11 +18,11 @@
 		conn = DriverManager.getConnection(url, id, pwd);
 		out.println("<h1>MySQL DB 연결 성공</h1>");
 		%>
-		<form method="post" action="/result.jsp">
-			내용을 작성하고 버튼을 클릭해주세요. <br/>
-			<textarea name="contents" rows = "7" cols = "40"
-			wrap = "virtual"></textarea>
-			<input name="btnSubmit" type="submit" value="제출">
+		<form method="post" action="/login_ok.jsp">
+			로그인 화면입니다. <br/>
+			ID:  <input type="text" name="id"><br/>
+			PW: <input type="password" name="pw"><br/>
+			<input name="submit" type="submit" value="Login"><br/>
 		</form>
 
 	</body>
