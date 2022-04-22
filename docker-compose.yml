@@ -1,5 +1,10 @@
 version: "3"
 
+networks:
+  broker-net:
+    external:
+      name: broker
+      
 services:
   nginx-web:
     image: ssy02060/nginx-web:latest
@@ -52,7 +57,7 @@ services:
       - ./Database/initdb.d:/docker-entrypoint-initdb.d
     
   python-cli:
-    image: python-cli
+    image: python-cli:latest
     container_name: python-cli
     build: 
       context: .
@@ -62,7 +67,4 @@ services:
     networks:
       broker-net:
         ipv4_address: 172.33.0.5
-networks:
-  broker-net:
-    external:
-      name: broker
+
