@@ -1,0 +1,10 @@
+FROM python:3.9
+LABEL maintainer="six-jo"
+
+COPY . /app/cli
+
+
+WORKDIR /app/cli
+
+RUN pip install pymysql 
+CMD ["python", "/app/cli/Utills/DBUser.py"]
