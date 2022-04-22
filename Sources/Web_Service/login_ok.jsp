@@ -18,12 +18,12 @@
 		conn = DriverManager.getConnection(url, id, pwd);
 		out.println("<h1>MySQL DB 연결 성공</h1>");
 		%>
-		<form method="post" action="/login_ok.jsp">
-			로그인 화면입니다. <br/>
-			ID:  <input type="text" name="id"><br/>
-			PW: <input type="password" name="pw"><br/>
-			<input name="submit" type="submit" value="Login"><br/>
+		<form method="post" action="/result.jsp">
+			<%= request.getParameter("id") %>님, 환영합니다.<br/>
+			내용 <br/>
+			<textarea name="contents" rows="7" cols="40" wrap="virtual"></textarea>
+			<input name="btn" type="submit" value="등록">
 		</form>
-
 	</body>
 </html>
+
