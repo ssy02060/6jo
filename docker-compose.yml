@@ -1,0 +1,68 @@
+version: "3"
+
+services:
+  nginx-web:
+    image: ssy02060/nginx-web:latest
+    restart: always
+    ports:
+      - "80:80"
+    container_name: nginx-web
+    volumes:
+      - ./Sources/PythonCLI/logs:/var/log/nginx/default
+      # - ../Sources/Web_Service/config:/etc/nginx/
+      # - ../Sources/Web_Service/config/server:/etc/nginx/conf.d
+    networks:
+      broker-net:
+        ipv4_address: 172.33.0.04
+
+  tomcat-server:
+    image: ssy02060/tomcat-server:latest
+    restart: always
+    ports:
+      - "8080:8080"
+      - "8009:8009"
+    container_name: tomcat-server
+    depends_on:
+      - mysql-server
+    volumes:
+      - ./Sources/Web_Service:/usr/local/tomcat/webapps/ROOT
+    networks:
+      broker-net:
+        ipv4_address: 172.33.0.03
+
+  mysql-server:
+    image: ssy02060/db-mysql:latest
+    restart: always
+    container_name: mysql-server
+    environment:
+      - MYSQL_DATABASE=cloud
+      - MYSQL_ROOT_PASSWORD=abcd
+      - TZ=Asia/Seoul
+    ports:
+      - "3306:3306"
+    networks:
+      broker-net:
+        ipv4_address: 172.33.0.2
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./Database/conf.d:/etc/mysql/conf.d
+      - ./Database/data:/var/lib/mysql
+      - ./Database/initdb.d:/docker-entrypoint-initdb.d
+    
+  python-cli:
+    image: python-cli
+    container_name: python-cli
+    build: 
+      context: .
+      dockerfile: ./Sources/PythonCLI/dockerfile
+    depends_on:
+      - mysql-server
+    networks:
+      broker-net:
+        ipv4_address: 172.33.0.5
+networks:
+  broker-net:
+    external:
+      name: broker
