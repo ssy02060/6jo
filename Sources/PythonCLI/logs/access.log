@@ -1,6 +1,0 @@
-10.0.2.2 - - [21/Apr/2022:08:43:57 +0000] "GET / HTTP/1.1" 500 4159 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36"
-10.0.2.2 - - [21/Apr/2022:08:43:57 +0000] "GET /favicon.ico HTTP/1.1" 404 804 "http://127.0.0.1/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36"
-10.0.2.2 - - [21/Apr/2022:08:45:00 +0000] "GET / HTTP/1.1" 500 4159 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36"
-10.0.2.2 - - [21/Apr/2022:08:53:46 +0000] "GET / HTTP/1.1" 500 4159 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36"
-10.0.2.2 [-] [22/Apr/2022:01:22:06 +0000] "GET / HTTP/1.1" 200 402 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36" "-"
-10.0.2.2 [id=aa&pw=aaa&submit=Login] [22/Apr/2022:01:25:27 +0000] "POST /login_ok.jsp HTTP/1.1" 500 2932 "http://localhost/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36" "-"
