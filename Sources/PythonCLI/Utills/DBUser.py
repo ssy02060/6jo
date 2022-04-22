@@ -47,28 +47,23 @@ def updateUser(menu, edit, id, pw):
     cursor = conn.cursor()
     
     # 사용자 정보를 수정하기 전에 일치하는 사용자가 있는지 확인
-    validationSQL = "SELECT * FROM user where id=%s and passwd=md5(%s)"
-    cursor.execute(validationSQL, (id, pw))
-    validation = cursor.fetchall()
-    if not validation:
-        print("사용자 정보가 없습니다.")
-        return ""
+    # validationSQL = "SELECT * FROM user where id=%s and passwd=md5(%s)"
+    # cursor.execute(validationSQL, (id, pw))
+    # validation = cursor.fetchall()
+    # if not validation:
+    #     print("사용자 정보가 없습니다.")
+    #     return ""
     
     # 사용자 정보 수정
     if menu == '1':
-        sql = "UPDATE user set id='"+edit+"' where id=%s and passwd=md5(%s)"
-    elif menu == '2':
         sql = "UPDATE user set passwd=md5('"+edit+"') where id=%s and passwd=md5(%s)"
-    elif menu == '3':
+    elif menu == '2':
         sql = "UPDATE user set name='"+edit+"' where id=%s and passwd=md5(%s)"
-    elif menu == 'q':
-        return ''
-    
+
     cursor.execute(sql, (id, pw))
     res = cursor.fetchall()
     conn.commit()
     conn.close()
-    print("변경 되었습니다.")
     return res
 
 def login(id, pw):
@@ -79,20 +74,19 @@ def login(id, pw):
     cursor = conn.cursor()
     sql = "SELECT * FROM user where id=%s and passwd=md5(%s)"
     cursor.execute(sql, (id, pw))
-    res = cursor.fetchall()
+    userInfo = cursor.fetchall()
     conn.commit()
     conn.close()
-    return res
+    return userInfo
 
-
-#createUserTable()
+# createUserTable()
 #insertUser("1","han","0000","seunghun")
 #insertUser("1","ddd","0000","seunghun")
 #insertUser("1","hbban","0000","seunghun")
 #insertUser("1","yyy","0000","seunghun")
-selectAllUser()
-print("")
+#selectAllUser()
+#print("")
 #login('dd(d', '0000')
-#updateUser('3', 'han', 'aaa', '1111')
+#updateUser('2', 'han', 'han', '1111')
 #print("")
 #selectAllUser()

@@ -2,11 +2,15 @@ from json.tool import main
 import pymysql
 
 
-def logFileSlice(log: list) -> list:
+def logFileSlice(log: list, prev_id, prev_ip) -> list:
+    # (0 : ip, 1: requset_body, 2: 시간, 3: 메서드, 4: URI, 5: html_code, 6: etc)
+    
     return_list = []
-    # ip 출력
+    #1 ip 출력
     end_ip_idx = log.find(' ', 0)
-    return_list.append(log[:end_ip_idx])
+    current_ip = log[:end_ip_idx]
+    return_list.append(current_ip)
+
 
     # $request_body 출력
     start_req_idx = log.find('[', end_ip_idx)
@@ -14,11 +18,28 @@ def logFileSlice(log: list) -> list:
     return_list.append(log[start_req_idx:end_req_idx + 1])
     # print(log[start_req_idx:end_req_idx + 1])
 
+    # id 값 가져가기
+
+    if 'id' in return_list[1]:
+        current_id = log[log.find('id=') + 3:log.find('&')]
+        if prev_ip == current_ip:
+            id = current_id
+        else:
+            id = prev_id
+    else:
+        if prev_ip != current_ip:
+            id = None
+        else:
+            id = prev_id
+
+    return_list.insert(0, id)
+
+
     # 시간 출력
     start_time_idx = log.find('[', end_req_idx)
     end_time_idx = log.find(']', start_time_idx)
     return_list.append(log[start_time_idx:end_time_idx + 1])
-    return_list.append(log[start_time_idx:end_time_idx + 1])
+
     # print(log[start_time_idx:end_time_idx + 1])
 
     # 메서드 출력 (GET, POST)
@@ -46,12 +67,16 @@ def logFileSlice(log: list) -> list:
     return_list.append(html_code)
     # print(html_code, body_bytes)
 
-    # 그 외
+    #그 외(details)
     start_etc_idx = log.find('"', end_code_idx)
     return_list.append(log[start_etc_idx:-1])
     # print(log[start_etc_idx:-1])
 
-    return return_list
+
+    # ip, id 정보 갱신
+    prev_ip = current_ip
+    prev_id = id
+    return return_list, prev_id, prev_ip
 
 
 def autoSaveLog() -> int:
@@ -60,22 +85,29 @@ def autoSaveLog() -> int:
     cursor = conn.cursor()
 
     line_cnt = 0
-    _file = open("/home/yoo/test_log", 'r')
+    prev_id, prev_ip = None, None
+    _file = open("/app/cli/logs/access.log", 'r')
     _list = _file.readlines()
 
     for log in _list:
         if _list != '\n':
             line_cnt += 1
-    log_file = logFileSlice(log)
-
-    sql = 'INSERT INTO user (id, ipAddr, time, method, url, code, etc)' \
-          'VALUES (%s, %s, %s, %s, %s, %s)'
-    cursor.execute(sql,
-                   (log_file[0], log_file[1], log_file[2],
-                    log_file[3], log_file[4], log_file[5]))
-    conn.commit()
+        ret_val = logFileSlice(log, prev_id, prev_ip)
+        log_file = ret_val[0]
+        prev_id, prev_ip = ret_val[1], ret_val[2]
+        sql = '''
+                INSERT INTO agentlog (id, ipAddr, time,
+                                    method, url, code, details)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            '''
+        cursor.execute(sql,
+                    (log_file[0], log_file[1], log_file[3],
+                        log_file[4], log_file[5], log_file[6], log_file[7]))
+        conn.commit()
     conn.close()
-
+    _file.close()
+   
+    print(line_cnt)
     return line_cnt
 
 
@@ -110,34 +142,26 @@ def insertUser(id, ipAddr, time, method, url, code, details):
     conn.close()
 
 
-'''def searchUserLog(id, pw, name, auth):
+def deleteTable():
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
-    sql = 'INSERT INTO user (account, passwd, name, auth) VALUES (%s, %s, %s, %s)'
-    cursor.execute(sql, (id, pw, name, auth))
-    conn.commit()
-    conn.close()
+    sql = '''
+        truncate agentlog;  
+    '''
 
-
-def selectAllUser():
+def selectLog(id):
+    id = id
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
-    sql = "SELECT * FROM user"
-    cursor.execute(sql)
+    sql = 'SELECT * FROM agentlog where id=%s'
+    cursor.execute(sql, id)
     res = cursor.fetchall()
-    users = res
-    print(users[0][3])
-    for user in users:
-        print(user)
+    log = list(res)
     conn.commit()
     conn.close()
+    return log
 
-# createUserTable()
-# insertUser("han","0000","seunghun","1")
-# insertUser("ddd","0000","seunghun","1")
-# insertUser("hbban","0000","seunghun","1")
-# insertUser("yyy","0000","seunghun","1")
-selectAllUser()
-'''
 # createAgentLogTable()
-insertUser('ddd', '1.2.2.2', '1', 'GET', '1', 200, '1')
+# deleteTable()
+# autoSaveLog()
+# insertUser('han', '1.2.2.2', '1', 'GET', '1', 200, '1')
