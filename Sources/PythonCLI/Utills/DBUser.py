@@ -5,10 +5,10 @@ def createUserTable():
     cursor = conn.cursor()
     sql ='''
         CREATE TABLE user ( 
-            auth int(2)
-            account varchar(32) NOT NULL PRIMARY KEY,
+            auth int(2),
+            id varchar(32) NOT NULL PRIMARY KEY,
             passwd  varchar(32),
-            name varchar(32), 
+            name varchar(32)
         ) 
     '''
     cursor.execute(sql) 
@@ -16,11 +16,11 @@ def createUserTable():
     conn.commit()
     conn.close()
 
-def insertUser(id, pw, name, auth):
+def insertUser(auth, id, pw, name):
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
-    sql = 'INSERT INTO user (account, passwd, name, auth) VALUES (%s, %s, %s, %s)'
-    cursor.execute(sql, (id, pw, name, auth))
+    sql = 'INSERT INTO user (auth, id, passwd, name) VALUES (%s, %s, md5(%s), %s)'
+    cursor.execute(sql, (auth, id, pw, name))
     conn.commit()
     conn.close()
 
@@ -37,10 +37,62 @@ def selectAllUser():
     conn.commit()
     conn.close()
 
-# createUserTable()
-# insertUser("han","0000","seunghun","1")
-# insertUser("ddd","0000","seunghun","1")
-# insertUser("hbban","0000","seunghun","1")
-# insertUser("yyy","0000","seunghun","1")
-selectAllUser()
+def updateUser(menu, edit, id, pw):
+    menu = menu
+    edit = edit
+    id = id
+    pw = pw
+    
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    
+    # 사용자 정보를 수정하기 전에 일치하는 사용자가 있는지 확인
+    validationSQL = "SELECT * FROM user where id=%s and passwd=md5(%s)"
+    cursor.execute(validationSQL, (id, pw))
+    validation = cursor.fetchall()
+    if not validation:
+        print("사용자 정보가 없습니다.")
+        return ""
+    
+    # 사용자 정보 수정
+    if menu == '1':
+        sql = "UPDATE user set id='"+edit+"' where id=%s and passwd=md5(%s)"
+    elif menu == '2':
+        sql = "UPDATE user set passwd=md5('"+edit+"') where id=%s and passwd=md5(%s)"
+    elif menu == '3':
+        sql = "UPDATE user set name='"+edit+"' where id=%s and passwd=md5(%s)"
+    elif menu == 'q':
+        return ''
+    
+    cursor.execute(sql, (id, pw))
+    res = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    print("변경 되었습니다.")
+    return res
 
+def login(id, pw):
+    id = id
+    pw = pw
+
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    sql = "SELECT * FROM user where id=%s and passwd=md5(%s)"
+    cursor.execute(sql, (id, pw))
+    res = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    return res
+
+
+#createUserTable()
+#insertUser("1","han","0000","seunghun")
+#insertUser("1","ddd","0000","seunghun")
+#insertUser("1","hbban","0000","seunghun")
+#insertUser("1","yyy","0000","seunghun")
+selectAllUser()
+print("")
+#login('dd(d', '0000')
+#updateUser('3', 'han', 'aaa', '1111')
+#print("")
+#selectAllUser()
