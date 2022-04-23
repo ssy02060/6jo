@@ -148,6 +148,9 @@ def deleteTable():
     sql = '''
         truncate agentlog;  
     '''
+    cursor.execute(sql)
+    conn.commit()
+    conn.close()
 
 # createAgentLogTable()
 
