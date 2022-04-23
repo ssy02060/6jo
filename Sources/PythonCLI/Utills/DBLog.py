@@ -149,8 +149,19 @@ def deleteTable():
         truncate agentlog;  
     '''
 
-# createAgentLogTable()
+def selectLog(id):
+    id = id
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    sql = 'SELECT * FROM agentlog where id=%s'
+    cursor.execute(sql, id)
+    res = cursor.fetchall()
+    log = list(res)
+    conn.commit()
+    conn.close()
+    return log
 
+# createAgentLogTable()
 # deleteTable()
 # autoSaveLog()
-# insertUser('ccc', '1.2.2.2', '1', 'GET', '1', 200, '1')
+# insertUser('han', '1.2.2.2', '1', 'GET', '1', 200, '1')
