@@ -133,7 +133,7 @@ def createAgentLogTable():
     conn.close()
 
 
-def insertUser(id, ipAddr, time, method, url, code, details):
+def insertLogForTest(id, ipAddr, time, method, url, code, details):
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
     sql = 'INSERT INTO agentlog (id, ipAddr, time, method, url, code, details) VALUES (%s, %s, %s, %s, %s, %s, %s)'
@@ -142,7 +142,7 @@ def insertUser(id, ipAddr, time, method, url, code, details):
     conn.close()
 
 
-def deleteTable():
+def deleteAllLog():
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
     sql = '''
@@ -151,6 +151,7 @@ def deleteTable():
     cursor.execute(sql)
     conn.commit()
     conn.close()
+
 
 def selectLog(id):
     id = id
