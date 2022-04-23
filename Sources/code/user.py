@@ -1,66 +1,74 @@
 import pymysql
 import DBUser
+import DBLog
 
-def printMenu():
-    print("메뉴를 선택해주세요")
-    print("----------------------")
-    print("1) 사용자 수정")
-    print("2) 사용자 로그 조회")
-    print("3) 작성한 Web Contents 확인")
-    print("4) 로그아웃")
-    menu = input("-----------------------\n")
-
+def printMenual():
+    menu = input('''
+            ----------------------------
+            1. 사용자 수정
+            2. 사용자 로그 조회
+            3. 작성한 Web Contents 확인
+            ----------------------------
+            *나가려면 Q를 누르세요*\n''')
     return menu
 
 def choiceMenu(userID, userPWD):
     ID = userID
     PWD = userPWD
 
+    print("사용자 페이지입니다.")
     while True:
-        menu = printMenu()
-        if menu == '1':
-            print("수정할 항목을 선택해주세요 (종료: q)")
-            print("--------------------------")
-            print("1) ID 수정")
-            print("2) Password 수정")
-            print("3) name 수정")
-            subMenu = input("--------------------------\n")
+        menu = printMenual()
 
-            if subMenu == 'q':
-                return ''
-            
+        if menu == '1':
+            # 사용자 수정 선택
+            print("수정할 항목을 선택해주세요.")
+            subMenu = input('''
+                --------------------
+                1. Password
+                2. Name
+                --------------------
+                *나가려면 Q를 누르세요*\n''')
             if subMenu == '1':
-                edit = input("수정할 ID를 입력해주세요: ")
+                edit = input("수정할 Password를 입력해주세요: ")
             elif subMenu == '2':
-                edit = input("수정할 password를 입력해주세요: ")
-            elif subMenu == '3':
-                edit = input("수정할 사용자 이름을 입력해주세요: ")
+                edit = input("수정할 Name을 입력해주세요: ")
+            elif subMenu == 'q':
+                return ''
             
             # DBUser.updateUser() 호출
             res = DBUser.updateUser(subMenu, edit, ID, PWD)
             return res
-            
         elif menu == '2':
-
-            conn = pymysql.connect(host='172.19.0.2', user='root', password='abcd', db='test', charset='utf8')
-            cursor = conn.cursor()
-
+            # 사용자 로그 조회 선택
             print("사용자 로그를 조회합니다.")
-            sql = "SELECT * FROM AgentLog"
-            cursor.execute(sql)
-            result = cursor.fetchall()
-            conn.commit()
-            conn.close()
-            return result
+            key = input("*로그를 새로고침 하려면 R, 나가려면 Q를 누르세요*\n")
+            if key == 'q':
+                return ''
+            elif key == 'r':
+                # 동섭님 refresh 함수 호출
+                print("새로고침")
+                return ''
+            else:
+                # DBLog.selectLog() 호출
+                res = DBLog.selectLog(ID)
+                return res
         elif menu == '3':
+            # 작성한 Web Contents 확인 선택
             print("작성한 Web Contents 확인\n")
             return ''
-            break
-        elif menu == '4':
-            print("로그아웃\n")
+        elif menu == 'q':
             return ''
-            break
         else:
-            print("잘못된 입력값입니다.\n")
+            print("잘못된 입력값입니다. 다시 입력해주세요.")
             continue
 
+def printResult(result):
+    if result == '':
+        print("종료되었습니다.\n")
+    elif not result:
+        print("변경되었습니다.\n")
+    else:
+        for i in result:
+            print(i)
+        print("")
