@@ -4,7 +4,7 @@
 <%@ page import="java.sql.PreparedStatement" %>
 <%@ page import="java.sql.ResultSet"%>
 <%@ page import="java.sql.SQLException"%>
-<%@ page import="java.security.MessageDigest;"%>
+<%@ page import="java.security.MessageDigest"%>
 
 <% request.setCharacterEncoding("utf-8"); %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -38,10 +38,13 @@
         PreparedStatement pstmt = null; 
         Statement stmt = null;
         ResultSet rs = null;
+        MessageDigest md = MessageDigest.getInstance("MD5");
        
         // 페이지에서 파라미터 값 가져오기
         String page_id = request.getParameter("id");
         String page_pw = request.getParameter("pw");
+        
+        try{
 
         // SQL 문
         String sql = "select * from user where id = ?;";
@@ -50,38 +53,43 @@
         
         rs = pstmt.executeQuery();
         
-
+        
         while (rs.next()) {
-            // id 확인 (미완성)
-            <!-- String isNull = rs.getString("id");
-            if (rs.wasNull()){
-            %>
-            <script>
-                alert("아이디 없다")
-                location.href="/login_test.jsp";
-            </script>
-        <%
-        } -->
+
+            // 입력값 암호화
+            String originalPasswd = page_pw;
+            byte[] bytData = originalPasswd.getBytes();
+            md.update(bytData);
+            byte[] digest = md.digest();
+    
+            String strENCData = "";
+            for(int i =0;i < digest.length;i++){
+                strENCData = strENCData + Integer.toHexString(digest[i] & 0xFF);
+            }
+            out.println(strENCData);
             // passwd 확인 (-MD5 된 암호를 사용해야함)
-            if(page_pw.equals(rs.getString("passwd"))) {
+            if(strENCData.equals(rs.getString("passwd"))) {
                session.setAttribute("page_id", rs.getString("id"));
                response.sendRedirect(request.getContextPath() + "/test_ok.jsp");
            }else{
         %>
             <script>
-                alert("비밀번호가 틀립니다!")
+                alert("비밀번호가 틀렸습니다.");
                 location.href="/login_test.jsp";
             </script>
         <%
            }
        
         }
-        
 
+    } catch (Exception e) {
+        throw e;
 
-        rs.close();
-        pstmt.close();
-        conn.close();
+    } finally{
+        if (rs != null) try { rs.close(); } catch(SQLException ex) {}
+        if (pstmt != null) try { pstmt.close(); } catch(SQLException ex) {}
+        if (conn != null) try { conn.close(); } catch(SQLException ex) {}
+    }
         %>
 
     
