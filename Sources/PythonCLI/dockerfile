@@ -7,4 +7,4 @@ COPY . /app/cli
 WORKDIR /app/cli
 
 RUN pip install pymysql[rsa]
-CMD ["python", "/app/cli/Utills/DBUser.py"]
+CMD ["python", "main.py"]

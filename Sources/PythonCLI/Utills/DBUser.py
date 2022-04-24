@@ -31,11 +31,26 @@ def selectAllUser():
     cursor.execute(sql)
     res = cursor.fetchall()
     users = res
-    print(users[0][3])
+    print("ID       PW      NAME        AUTH")
     for user in users:
-        print(user)
+        print(user[1],user[2], user[3], user[0], sep="\t")
     conn.commit()
     conn.close()
+def selectAllUserWithIndex():
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    sql = "SELECT * FROM user"
+    cursor.execute(sql)
+    res = cursor.fetchall()
+    users = res
+    i = 0
+    print("INDEX  ID       PW      NAME        AUTH")
+    for user in users:
+        print(i,user[1],user[2], user[3], user[0], sep="\t")
+        i+=1
+    conn.commit()
+    conn.close()
+    return len(users)
 
 def updateUser(menu, edit, id, pw):
     menu = menu
@@ -61,6 +76,36 @@ def updateUser(menu, edit, id, pw):
         sql = "UPDATE user set name='"+edit+"' where id=%s and passwd=md5(%s)"
 
     cursor.execute(sql, (id, pw))
+    res = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    return res
+
+def updatePassword(id, editPassword):
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    sql = "UPDATE user set passwd=md5(%s) where id=%s"
+    cursor.execute(sql, (editPassword, id))
+    res = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    return res
+
+def updateName(id, editName):
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    sql = "UPDATE user set name=%s where id=%s"
+    cursor.execute(sql, (editName, id))
+    res = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    return res
+
+def updateAuth(id, editAuth):
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    sql = "UPDATE user set auth=%s where id=%s"
+    cursor.execute(sql, (editAuth, id))
     res = cursor.fetchall()
     conn.commit()
     conn.close()

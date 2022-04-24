@@ -164,7 +164,16 @@ def selectLog(id):
     conn.commit()
     conn.close()
     return log
-
+def selectAllLog():
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    sql = 'SELECT * FROM agentlog'
+    cursor.execute(sql)
+    res = cursor.fetchall()
+    log = list(res)
+    conn.commit()
+    conn.close()
+    return log
 # createAgentLogTable()
 # deleteTable()
 # autoSaveLog()
