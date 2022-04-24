@@ -109,14 +109,12 @@ class AdminPage:
 3. 사용자 정보 수정
 4. 사용자 정보 삭제
 ----------------------------
-*나가려면 Q를 입력하세요*
-
-    ''')
+*나가려면 Q를 입력하세요*''')
 
     def inputManageUserMenu(self):
         option = input()
         if option == '1':
-            self.insertUser()
+            self.insertUserMenu()
         elif option == '2':
             self.selectAllUser()
         elif option == '3':
@@ -138,8 +136,7 @@ class AdminPage:
         os.system("clear")
         print('''
 사용자 생성 메뉴입니다. 사용자 정보를 입력하세요.
-----------------------------
-''')
+----------------------------''')
 
     def inputUserInfo(self):
         userId    = input("ID             : ")
@@ -185,6 +182,7 @@ class AdminPage:
 # 사용자 수정
     def updateUser(self):
         print("작업 진행 중,,,,")
+        self.quitToUserManagePage()
         # self.printUpdateUserMenu()
         # self.inputUpdateUserMenu()
         pass
@@ -248,3 +246,4 @@ class AdminPage:
 # 사용자 삭제 페이지
     def deleteUser(self):
         print("작업 진행 중,,,")
+        self.quitToUserManagePage()
