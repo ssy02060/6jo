@@ -79,19 +79,18 @@ def logFileSlice(log: list, prev_id, prev_ip) -> list:
     return return_list, prev_id, prev_ip
 
 
-def autoSaveLog() -> int:
+def autoSaveLog(line_cnt :int) -> None:
     # main 함수에서 total_cnt와 return 값 확인하기
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
 
-    line_cnt = 0
     prev_id, prev_ip = None, None
     _file = open("/app/cli/logs/access.log", 'r')
-    _list = _file.readlines()
+    _list = _file.readlines()[line_cnt:]
 
     for log in _list:
-        if _list != '\n':
-            line_cnt += 1
+        # if _list != '\n':
+        #     line_cnt += 1
         ret_val = logFileSlice(log, prev_id, prev_ip)
         log_file = ret_val[0]
         prev_id, prev_ip = ret_val[1], ret_val[2]
@@ -108,7 +107,7 @@ def autoSaveLog() -> int:
     _file.close()
    
     print(line_cnt)
-    return line_cnt
+    # return line_cnt
 
 
 def createAgentLogTable():
@@ -164,6 +163,8 @@ def selectLog(id):
     conn.commit()
     conn.close()
     return log
+
+
 def selectAllLog():
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
