@@ -47,6 +47,23 @@ def selectAllWebContents():
         print(webContent[0], webContent[1], webContent[2], sep='\t')
     conn.close()
 
+def createWebContentsTable():
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    sql = ''' 
+         CREATE TABLE web_contents ( 
+            idx int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            user_id varchar(32),
+            contents TEXT,
+            FOREIGN KEY (user_id) REFERENCES user (id)
+            )
+            '''
+
+    cursor.execute(sql)
+    print("created AgnetLog table successfully")
+    conn.commit()
+    conn.close()
+
 # createUserTable()
 # insertUser("han","0000","seunghun","1")
 # insertUser("ddd","0000","seunghun","1")
