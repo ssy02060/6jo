@@ -19,10 +19,26 @@ def createUserTable():
 def insertUser(auth, id, pw, name):
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
-    sql = 'INSERT INTO user (auth, id, passwd, name) VALUES (%s, %s, md5(%s), %s)'
-    cursor.execute(sql, (auth, id, pw, name))
-    conn.commit()
-    conn.close()
+
+    # 사용자를 추가하기 전에 일치하는 사용자가 있는지 확인
+    validationSQL = "SELECT * FROM user where id=%s"
+    cursor.execute(validationSQL, id)
+    validation = cursor.fetchall()
+    if not validation:
+        sql = 'INSERT INTO user (auth, id, passwd, name) VALUES (%s, %s, md5(%s), %s)'
+        cursor.execute(sql, (auth, id, pw, name))
+        conn.commit()
+        conn.close()
+        return 1
+    else:
+        conn.close()
+        return 0
+
+
+    # sql = 'INSERT INTO user (auth, id, passwd, name) VALUES (%s, %s, md5(%s), %s)'
+    # cursor.execute(sql, (auth, id, pw, name))
+    # conn.commit()
+    # conn.close()
 
 def selectAllUser():
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')

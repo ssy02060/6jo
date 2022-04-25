@@ -176,8 +176,11 @@ class AdminPage:
 
 
     def insertUser(self, auth, userId, pw, name):
-        DBUser.insertUser(auth,userId,pw,name)
-        print("%s 님이 추가되었습니다. 나가려면 아무 키나 입력하세요." % userId)
+        returnCode = DBUser.insertUser(auth,userId,pw,name)
+        if returnCode == 1:
+            print("%s 님이 추가되었습니다. 나가려면 아무 키나 입력하세요." % userId)
+        else:
+            print("이미 등록된 사용자입니다.")
         self.quitToUserManagePage()
 
         
