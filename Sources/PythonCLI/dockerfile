@@ -1,7 +1,7 @@
 FROM python:3.9
 LABEL maintainer="six-jo"
 
-COPY . /app/cli
+COPY ./Sources/PythonCLI /app/cli
 
 
 WORKDIR /app/cli
