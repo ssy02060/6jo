@@ -39,21 +39,28 @@ class UserPage:
             self.printMenual()
 # 유저 로그 페이지
     def logMenu(self):
+        self.loadLog()
         self.printLogMenu()
         self.inputLogMenu()
         
     def printLogMenu(self):
         os.system('clear')
         print('''
-        ----------------------------
-        사용자 로그를 조회합니다.
-        ----------------------------
-        ''')
-        DB_line = len(DBLog.selectLog(self.userId))
+----------------------------
+사용자 로그를 조회합니다.
+----------------------------''')
+        print("ID   IP      DATE            METHOD  URL              STATUS ")
+        self.printLogs()
+        print("*나가려면 q, 새로고침하려면 r을 입력하세요*")     
+
+    def loadLog(self):
+        DB_line = len(DBLog.selectAllLog())
         DBLog.autoSaveLog(DB_line)
 
+    def printLogs(self):
         logs = DBLog.selectLog(self.userId)
-        print("ID   IP      DATE            METHOD  URL              STATUS  DETAILS")
+        
+        print("ID   IP      DATE            METHOD  URL              STATUS")
         for log in logs:
             userId  = log[0]
             userIP  = log[1]
@@ -63,7 +70,7 @@ class UserPage:
             status  = str(log[5])
             details = log[6]
             print(userId,userIP,date,method,url,status)
-        print("*나가려면 q, 새로고침하려면 r을 입력하세요*")     
+
 
     def inputLogMenu(self):
         option = input()
@@ -109,9 +116,7 @@ class UserPage:
 1. Password
 2. Name
 ----------------------------
-*나가려면 Q를 입력하세요*
-
-    ''')
+*나가려면 Q를 입력하세요*''')
 
     def inputUpdateUserMenu(self):
         updateOption = input()

@@ -64,6 +64,10 @@ services:
       dockerfile: ./Sources/PythonCLI/dockerfile
     depends_on:
       - mysql-server
+    volumes:
+      - ./Sources/Python-CLI/logs:/app/cli/logs
+    tty: true
+    stdin_open: true
     networks:
       broker-net:
         ipv4_address: 172.33.0.5

@@ -45,38 +45,28 @@ class AdminPage:
 
 # 관리자 로그 페이지
     def logMenu(self):
+        self.loadLog()
         self.printLogMenu()
         self.inputLogMenu()
         
     def printLogMenu(self):
         os.system('clear')
         print('''
-        ----------------------------
-        사용자 로그를 조회합니다.
-        ----------------------------
-        ''')
+----------------------------
+사용자 로그를 조회합니다.
+----------------------------''')        
+        # 로그 출력
+        self.printLogs()
+        print("*나가려면 q, 새로고침하려면 r을 입력하세요*")     
 
-        # 현재 로그 갯수 확인 후 로그데이터 최신화
+    def loadLog(self):
         DB_line = len(DBLog.selectAllLog())
         DBLog.autoSaveLog(DB_line)
-        # log_line = 0
-        # _file = open("/app/cli/logs/access.log", "r")
-        # _list = _file.readlines()
-        # for _ in _list:
-        #     if _list != '\n':
-        #         log_line += 1
-        
-        # _file.close()
-        # print(f' 현재 로그파일 문장수{log_line}')
-        # print(f' 현재 데이터베이스 로그 문장 수 :{DB_line}')
-        # if DB_line == 0 and log_line != DB_line:
-        #     DBLog.autoSaveLog(DB_line)
 
-        
-        # 로그 출력
+    def printLogs(self):
         logs = DBLog.selectAllLog()
         
-        print("ID   IP      DATE            METHOD  URL              STATUS  DETAILS")
+        print("ID   IP      DATE            METHOD  URL              STATUS")
         for log in logs:
             userId  = log[0]
             userIP  = log[1]
@@ -86,9 +76,7 @@ class AdminPage:
             status  = str(log[5])
             details = log[6]
             print(userId,userIP,date,method,url,status)
-        print("*나가려면 q, 새로고침하려면 r을 입력하세요*")     
 
-    
     def inputLogMenu(self):
         option = input()
         if option == 'q' or option == 'Q':
@@ -127,6 +115,7 @@ class AdminPage:
     def manageUserMenu(self):
         self.printManageUserMenu()
         self.inputManageUserMenu()
+        return
 
 
     def printManageUserMenu(self):
@@ -147,7 +136,7 @@ class AdminPage:
         if option == '1':
             self.insertUserMenu()
         elif option == '2':
-            self.selectAllUser()
+            self.selectAllUserMenu()
         elif option == '3':
             self.updateUser()
         elif option == '4':
@@ -201,13 +190,12 @@ class AdminPage:
         self.printAllUserMenu()
         self.selectAllUser()
     
-
     def printAllUserMenu(self):
         os.system("clear")
         print('''
 전체 사용자 목록을 조회합니다.
-----------------------------
-''')
+----------------------------''')
+
     def selectAllUser(self):
         DBUser.selectAllUser()
         self.quitToUserManagePage()
@@ -217,45 +205,86 @@ class AdminPage:
         print("*나가려면 아무 키나 입력하세요*")
         input()
         self.manageUserMenu()
+        return
 
 # 사용자 수정
     def updateUser(self):
-        print("작업 진행 중,,,,")
+        self.updateWithUserList()
         self.quitToUserManagePage()
-        # self.printUpdateUserMenu()
-        # self.inputUpdateUserMenu()
-        pass
-
-
-    def printUpdateUserMenu(self):
-        os.system("clear")
-        print('''
-사용자 수정 페이지입니다.
-----------------------------
-1. 사용자 목록 확인 후 수정
-2. 사용자 ID로 수정
-*나가려면 Q를 입력하세요*
-''')
-    def inputUpdateUserMenu(self):
-        option = input()
-        if option == '1':
-            self.updateWithUserList()
-        elif option == '2':
-            # self.updateWithUserID()
-            pass
-        elif option == 'q' or option == 'Q':
-            self.quitToUserManagePage()
-    
+        return
 
     def updateWithUserList(self):
-        self.printAllUserMenu()
-        numOfUser = DBUser.selectAllUser()
+        self.printUserListForUpdate()
+        self.inputUserNameForUpdate()
+        return
+    
+    def printUserListForUpdate(self):
+        os.system("clear")
+        print('''
+사용자 수정 페이지입니다. (사용자 목록)
+----------------------------''')
+        DBUser.selectAllUser()
+        print("수정할 유저 ID를 입력하세요. (나가려면 q를 입력하세요)")
+        return
+    
+    def inputUserNameForUpdate(self):
+        userId = input("ID : ")
+        if(userId == 'q'):
+            self.manageUserMenu()
+            return
+        user = DBUser.selectUser(userId)
+        
+        while not user:
+            self.printUserListForUpdate()
+            print(user)
+            print("해당 유저는 존재하지 않습니다. ID를 확인해 주세요")
+            userId = input("ID : ")
+            if(userId == 'q'):
+                self.manageUserMenu()
+                return
+            user = DBUser.selectUser(userId)
+        self.updateWithUserID(userId)
+        return
 
+    def updateWithUserID(self, updateUserID):
+        self.printUpdateUserMenuWithUserID()
+        self.inputUpdateUserMenu(updateUserID)
+        return
+
+    def printUpdateUserMenuWithUserID(self):
+        os.system('clear')
+        print('''
+수정할 항목을 선택해주세요.
+----------------------------
+1. Password
+2. Name
+3. Permission
+----------------------------
+*나가려면 Q를 입력하세요*''')
+        return
+
+    def inputUpdateUserMenu(self, updateUserID):
+        updateOption = input()
+        if updateOption == '1':
+            self.updateUserPassword(updateUserID)
+        elif updateOption == '2':
+            self.updateUserName(updateUserID)
+        elif updateOption == '3':
+            self.updateUserAuth(updateUserID)
+        elif updateOption == 'q' or updateOption ==  'Q':
+            self.manageUserMenu()
+        else:
+            os.system('clear')
+            print("옵션을 확인하세요")
+            self.updateWithUserID(updateUserID)
+        return
+    
 
     def quitToUpdateUserPage(self):
         print("*나가려면 아무 키나 입력하세요*")
         input()
         self.updateUser()
+        return
 
 
     def updateUserAuth(self, targetId):
@@ -264,9 +293,10 @@ class AdminPage:
         DBUser.updateAuth(targetId, int(editAuth))
         print("수정이 완료되었습니다.")
         self.quitToUserManagePage()
+        return
     
 
-    def inputAuth():
+    def inputAuth(self):
         auth = input("권한을 입력하세요 (0 또는 1) : ")
         while(not(auth == '0' or auth == '1')):
             print("---------AUTH ERROR---------")
@@ -281,6 +311,7 @@ class AdminPage:
         res = DBUser.updateName(targetId, editName)
         print("수정이 완료되었습니다.")
         self.quitToUserManagePage()
+        return
 
 
     def updateUserPassword(self, targetId):
@@ -289,9 +320,50 @@ class AdminPage:
         editPassword = input()
         res = DBUser.updatePassword(targetId, editPassword)
         self.quitToUserManagePage()
-
+        return
 
 # 사용자 삭제 페이지
     def deleteUser(self):
-        print("작업 진행 중,,,")
-        self.quitToUserManagePage()
+        self.printUserListForDelete()
+        self.inputUserNameForDelete()
+
+        
+    def printUserListForDelete(self):
+        os.system("clear")
+        print('''
+사용자 삭제 페이지입니다. (사용자 목록)
+----------------------------''')
+        DBUser.selectAllUser()
+        print("수정할 유저 ID를 입력하세요. (나가려면 q를 입력하세요)")
+        return
+
+    def inputUserNameForDelete(self):
+        userId = input("ID : ")
+        if(userId == 'q'):
+            self.manageUserMenu()
+            return
+        user = DBUser.selectUser(userId)
+        
+        while not user:
+            self.printUserListForDelete()
+            print(user)
+            print("해당 유저는 존재하지 않습니다. ID를 확인해 주세요")
+            userId = input("ID : ")
+            if(userId == 'q'):
+                self.manageUserMenu()
+                return
+            user = DBUser.selectUser(userId)
+        self.deleteWithUserId(userId)
+        return
+    
+    def deleteWithUserId(self, userID):
+        os.system("clear")
+        print(userID+ "님을 삭제 하시겠습니까? (y/n)")
+        yn = input()
+        if(yn == 'y'):
+            DBUser.deleteUser(userID)
+            print(userID + "님이 삭제되었습니다.")
+            self.quitToUserManagePage()
+        else:
+            print(userID + "님을 삭제하지 않습니다.")
+            self.quitToUserManagePage()

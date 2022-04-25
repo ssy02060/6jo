@@ -52,6 +52,29 @@ def selectAllUser():
         print(user[1],user[2], user[3], user[0], sep="\t")
     conn.commit()
     conn.close()
+    return len(users)
+
+def selectUser(userID):
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+    sql = "SELECT * FROM user where id=%s"
+    cursor.execute(sql,userID)
+    res = cursor.fetchall()
+    user = res
+    conn.commit()
+    conn.close()
+    return user
+
+def deleteUser(userID):
+    conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
+    cursor = conn.cursor()
+
+    sql = "DELETE FROM user where id=%s"
+    cursor.execute(sql,userID)
+
+    conn.commit()
+    conn.close()
+
 def selectAllUserWithIndex():
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
