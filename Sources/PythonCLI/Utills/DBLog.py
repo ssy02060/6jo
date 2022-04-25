@@ -121,8 +121,7 @@ def createAgentLogTable():
             method varchar(32),
             url varchar(255),
             code int(20),
-            details varchar(255),
-            FOREIGN KEY (id) REFERENCES user (id)
+            details varchar(255)
             )
             '''
 
