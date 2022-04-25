@@ -42,7 +42,7 @@
         
         try{
         // SQL 문
-        String sql = "select * from user1 where id = ?;";
+        String sql = "select * from user where id = ?;";
         pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, page_id);
         rs = pstmt.executeQuery();
