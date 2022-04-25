@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<form method="post" action="/insert_contents.jsp">
-			<%= request.getParameter("id") %>님, 환영합니다.<br/>
+			<%= session.getAttribute("id") %>님, 환영합니다.<br/>
 			<%
 				session.setAttribute("id", request.getParameter("id"));
 			%>

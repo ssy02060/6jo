@@ -7,9 +7,17 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title> www.example.com </title>
+		<title> login페이지 입니다. </title>
 	</head>
 	<body>
+
+		<form method="post" action="/login.jsp">
+			로그인 화면입니다. <br/>
+			ID:  <input type="text" name="id"><br/>
+			PW: <input type="password" name="pw"><br/>
+			
+			<input name="submit" type="submit" value="Login"><br/>
+		</form>
 		<%
 		Connection conn = null;
 		String url = "jdbc:mysql://172.33.0.2:3306/cloud";
@@ -19,13 +27,5 @@
 		conn = DriverManager.getConnection(url, id, pwd);
 		out.println("<h1>MySQL DB 연결 성공</h1>");
 		%>
-		<form method="post" action="/login_ok.jsp">
-			로그인 화면입니다. <br/>
-			ID:  <input type="text" name="id"><br/>
-			PW: <input type="password" name="pw"><br/>
-			
-			<input name="submit" type="submit" value="Login"><br/>
-		</form>
-
 	</body>
 </html>
