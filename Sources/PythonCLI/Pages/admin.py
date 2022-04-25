@@ -5,6 +5,9 @@ import Utills.DBLog as DBLog
 import Pages.login as login
 import Utills.DBWebContents as DBWebContents
 import os
+import importlib
+importlib.reload(DBLog)
+
 
 class AdminPage:
     def __init__(self, id):
@@ -30,7 +33,6 @@ class AdminPage:
             self.manageUserMenu()
         elif menu == '2':
             self.logMenu()
-            pass
         elif menu == '3':
             self.printWebContentsMenu()
             self.inputWebContentsMenu()
@@ -55,9 +57,22 @@ class AdminPage:
         ''')
 
         # 현재 로그 갯수 확인 후 로그데이터 최신화
-        cur_log_line = len(DBLog.selectAllLog())
-        DBLog.autoSaveLog(cur_log_line)
+        DB_line = len(DBLog.selectAllLog())
+        DBLog.autoSaveLog(DB_line)
+        # log_line = 0
+        # _file = open("/app/cli/logs/access.log", "r")
+        # _list = _file.readlines()
+        # for _ in _list:
+        #     if _list != '\n':
+        #         log_line += 1
+        
+        # _file.close()
+        # print(f' 현재 로그파일 문장수{log_line}')
+        # print(f' 현재 데이터베이스 로그 문장 수 :{DB_line}')
+        # if DB_line == 0 and log_line != DB_line:
+        #     DBLog.autoSaveLog(DB_line)
 
+        
         # 로그 출력
         logs = DBLog.selectAllLog()
         
@@ -176,11 +191,8 @@ class AdminPage:
 
 
     def insertUser(self, auth, userId, pw, name):
-        returnCode = DBUser.insertUser(auth,userId,pw,name)
-        if returnCode == 1:
-            print("%s 님이 추가되었습니다. 나가려면 아무 키나 입력하세요." % userId)
-        else:
-            print("이미 등록된 사용자입니다.")
+        DBUser.insertUser(auth,userId,pw,name)
+        print("%s 님이 추가되었습니다. 나가려면 아무 키나 입력하세요." % userId)
         self.quitToUserManagePage()
 
         

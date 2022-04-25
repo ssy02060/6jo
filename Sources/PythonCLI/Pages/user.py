@@ -45,10 +45,13 @@ class UserPage:
     def printLogMenu(self):
         os.system('clear')
         print('''
-----------------------------
-사용자 로그를 조회합니다.
-----------------------------
+        ----------------------------
+        사용자 로그를 조회합니다.
+        ----------------------------
         ''')
+        DB_line = len(DBLog.selectLog(self.userId))
+        DBLog.autoSaveLog(DB_line)
+
         logs = DBLog.selectLog(self.userId)
         print("ID   IP      DATE            METHOD  URL              STATUS  DETAILS")
         for log in logs:

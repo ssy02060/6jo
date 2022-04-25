@@ -1,5 +1,9 @@
 from json.tool import main
 import pymysql
+import Utills.DBLog as DBLog
+import importlib
+importlib.reload(DBLog)
+
 
 
 def logFileSlice(log: list, prev_id, prev_ip) -> list:
@@ -85,12 +89,12 @@ def autoSaveLog(line_cnt :int) -> None:
     cursor = conn.cursor()
 
     prev_id, prev_ip = None, None
-    _file = open("/app/cli/logs/access.log", 'r')
+    _file = open("/app/cli/logs/access.log", "r")
     _list = _file.readlines()[line_cnt:]
 
     for log in _list:
-        # if _list != '\n':
-        #     line_cnt += 1
+        if _list != '\n':
+            line_cnt += 1
         ret_val = logFileSlice(log, prev_id, prev_ip)
         log_file = ret_val[0]
         prev_id, prev_ip = ret_val[1], ret_val[2]
@@ -102,11 +106,11 @@ def autoSaveLog(line_cnt :int) -> None:
         cursor.execute(sql,
                     (log_file[0], log_file[1], log_file[3],
                         log_file[4], log_file[5], log_file[6], log_file[7]))
-        conn.commit()
+    conn.commit()
     conn.close()
     _file.close()
    
-    print(line_cnt)
+    # print(f' 업데이트 된 총 문장 :{line_cnt}')
     # return line_cnt
 
 
