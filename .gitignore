@@ -2,3 +2,5 @@ Database/data
 Sources/PythonCLI/logs/default/access.log
 Sources/PythonCLI/logs/default/error.log
 Sources/PythonCLI/Pages/__pycache__/
+Sources/PythonCLI/Utills/__pycache__/DBLog.cpython-38.pyc
+Sources/PythonCLI/Utills/__pycache__/DBUser.cpython-38.pyc
