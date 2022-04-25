@@ -13,10 +13,6 @@
 	<body>
 		<form method="post" action="/insert_contents.jsp">
 			<%= session.getAttribute("id") %>님, 환영합니다.<br/>
-			<%
-				session.setAttribute("id", request.getParameter("id"));
-			%>
-			
 			내용 <br/>
 			<textarea name="contents" rows="7" cols="40" wrap="virtual"></textarea>
 			<input name="btn" type="submit" value="등록">

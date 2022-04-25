@@ -30,7 +30,6 @@
             pstmt = conn.prepareStatement(query);
             pstmt.setString(1, userId);
             pstmt.setString(2, contents);
-            out.println(contents);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
