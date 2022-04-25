@@ -65,7 +65,7 @@ services:
     depends_on:
       - mysql-server
     volumes:
-      - ./Sources/Python-CLI/logs:/app/cli/logs
+      - ./Sources/PythonCLI/logs:/app/cli/logs/
     tty: true
     stdin_open: true
     networks:
