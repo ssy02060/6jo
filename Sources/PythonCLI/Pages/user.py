@@ -70,7 +70,8 @@ class UserPage:
                 DBLog.autoSaveLog(0)
             else:
                 DBLog.autoSaveLog(DB_line)
-
+        _file.close()
+        
 
     def printLogs(self):
         logs = DBLog.selectLog(self.userId)
