@@ -61,6 +61,7 @@ class AdminPage:
 
 
     def loadLog(self):
+        # DB_line 과 Log_line을 비교하여 데이터베이스 최신화
         DB_line = len(DBLog.selectAllLog())
         log_line = 0
         _file = open("/app/cli/logs/access.log", "r")
@@ -72,9 +73,11 @@ class AdminPage:
         
         if log_line != DB_line:
             if DB_line == 0:
-                DBLog.autoSaveLog(0)
+                DBLog.autoSaveLog(0)        # 최초 실행 시 처음부터 전부 저장
             else:
-                DBLog.autoSaveLog(DB_line)
+                DBLog.autoSaveLog(DB_line)  # 그 외 새로운 로그만 저장 
+
+        _file.close()
 
 
     def printLogs(self):
