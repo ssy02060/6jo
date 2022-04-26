@@ -4,6 +4,7 @@ import Utills.DBLog as DBLog
 import Pages.login as login
 import Utills.DBWebContents as DBWebContents
 import os
+import time
 
 class UserPage:
     def __init__(self, id):
@@ -150,14 +151,16 @@ class UserPage:
         os.system('clear')
         print("수정할 Name을 입력해주세요 : ") 
         editName = input()
-        res = DBUser.updateName(self.userId, editName)
+        DBUser.updateName(self.userId, editName)
         print("수정이 완료되었습니다. 다시 로그인 하세요.")
+        time.sleep(5)
         login.printManual()
 
     def updateUserPassword(self):
         os.system('clear')
         print("수정할 Password를 입력해주세요 : ")
         editPassword = input()
-        res = DBUser.updatePassword(self.userId, editPassword)
+        DBUser.updatePassword(self.userId, editPassword)
         print("수정이 완료되었습니다. 다시 로그인 하세요.")
+        time.sleep(5)
         login.printManual()

@@ -125,20 +125,18 @@ def updatePassword(id, editPassword):
     cursor = conn.cursor()
     sql = "UPDATE user set passwd=md5(%s) where id=%s"
     cursor.execute(sql, (editPassword, id))
-    res = cursor.fetchall()
+    cursor.fetchall()
     conn.commit()
     conn.close()
-    return res
 
 def updateName(id, editName):
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
     cursor = conn.cursor()
     sql = "UPDATE user set name=%s where id=%s"
     cursor.execute(sql, (editName, id))
-    res = cursor.fetchall()
+    cursor.fetchall()
     conn.commit()
     conn.close()
-    return res
 
 def updateAuth(id, editAuth):
     conn = pymysql.connect(host='172.33.0.2', user='root', password='abcd', db='cloud', charset='utf8')
