@@ -59,9 +59,23 @@ class AdminPage:
         self.printLogs()
         print("*나가려면 q, 새로고침하려면 r을 입력하세요*")     
 
+
     def loadLog(self):
         DB_line = len(DBLog.selectAllLog())
-        DBLog.autoSaveLog(DB_line)
+        log_line = 0
+        _file = open("/app/cli/logs/access.log", "r")
+        _list = _file.readlines()
+
+        for log in _list:
+            if log != '\n':
+                log_line += 1
+        
+        if log_line != DB_line:
+            if DB_line == 0:
+                DBLog.autoSaveLog(0)
+            else:
+                DBLog.autoSaveLog(DB_line)
+
 
     def printLogs(self):
         logs = DBLog.selectAllLog()
@@ -180,8 +194,11 @@ class AdminPage:
 
 
     def insertUser(self, auth, userId, pw, name):
-        DBUser.insertUser(auth,userId,pw,name)
-        print("%s 님이 추가되었습니다. 나가려면 아무 키나 입력하세요." % userId)
+        returnCode = DBUser.insertUser(auth,userId,pw,name)
+        if returnCode == 1:
+            print("%s 님이 추가되었습니다. 나가려면 아무 키나 입력하세요." % userId)
+        else:
+            print("이미 등록된 사용자입니다.")
         self.quitToUserManagePage()
 
         
@@ -236,7 +253,7 @@ class AdminPage:
         
         while not user:
             self.printUserListForUpdate()
-            print(user)
+            # print(user)
             print("해당 유저는 존재하지 않습니다. ID를 확인해 주세요")
             userId = input("ID : ")
             if(userId == 'q'):
@@ -319,6 +336,7 @@ class AdminPage:
         print("수정할 Password를 입력해주세요 : ")
         editPassword = input()
         res = DBUser.updatePassword(targetId, editPassword)
+        print("수정이 완료되었습니다.")
         self.quitToUserManagePage()
         return
 
@@ -346,7 +364,7 @@ class AdminPage:
         
         while not user:
             self.printUserListForDelete()
-            print(user)
+            # print(user)
             print("해당 유저는 존재하지 않습니다. ID를 확인해 주세요")
             userId = input("ID : ")
             if(userId == 'q'):

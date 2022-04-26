@@ -53,9 +53,23 @@ class UserPage:
         self.printLogs()
         print("*나가려면 q, 새로고침하려면 r을 입력하세요*")     
 
+
     def loadLog(self):
         DB_line = len(DBLog.selectAllLog())
-        DBLog.autoSaveLog(DB_line)
+        log_line = 0
+        _file = open("/app/cli/logs/access.log", "r")
+        _list = _file.readlines()
+
+        for log in _list:
+            if log != '\n':
+                log_line += 1
+        
+        if log_line != DB_line:
+            if DB_line == 0:
+                DBLog.autoSaveLog(0)
+            else:
+                DBLog.autoSaveLog(DB_line)
+
 
     def printLogs(self):
         logs = DBLog.selectLog(self.userId)
