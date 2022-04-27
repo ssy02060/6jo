@@ -12,4 +12,4 @@
 - sudo docker-compose up -d
 
 ### [ Start user management system in python cli ]
-- sudo docker run -it --network=broker python-cli
+- sudo docker start -i python-cli
